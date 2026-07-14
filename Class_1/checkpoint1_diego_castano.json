@@ -1,0 +1,309 @@
+{
+  "name": "checkpoint1_diego_castano",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d5544a4f-3398-4a4b-b2aa-21010e5b4fbb",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e7b8db81-4c6a-41ff-8891-4b74b8ee79d0",
+      "name": "Webhook",
+      "webhookId": "d5544a4f-3398-4a4b-b2aa-21010e5b4fbb"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        80,
+        208
+      ],
+      "id": "004303e4-fb6a-4b9c-9a33-abdd47342d5a",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "NEEpCfVR18CKMgGG",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Create a social media post using the following input:\n\n{{ JSON.stringify($json.body) }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a Social Media Content Creation Assistant.\n\nYour task is to create one social media post from the input provided by the user.\n\nReturn only valid JSON using this structure:\n\n{\n  \"title\": \"Short and engaging title\",\n  \"caption\": \"Main post content\",\n  \"callToAction\": \"Question or invitation\",\n  \"hashtags\": [\n    \"#Hashtag1\",\n    \"#Hashtag2\",\n    \"#Hashtag3\"\n  ]\n}\n\nRules:\n\n1. Use the requested language.\n2. Adapt the content to the requested platform.\n3. Follow the requested tone.\n4. Include 3 to 5 hashtags.\n5. Do not include Markdown.\n6. Do not include explanations outside the JSON.\n7. Do not repeat the input.\n8. Do not invent statistics, studies, or sources.\n9. If any of the json items is empty throw an error and use the error message as content.",
+          "maxIterations": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        208,
+        0
+      ],
+      "id": "0af94f75-7d6b-4136-ab6d-fcefb0efe13c",
+      "name": "Content Creator Assistant",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"title\": \"Why Perfume Smells Different on Each Person\",\n  \"caption\": \"Perfume can develop differently depending on skin temperature, hydration, and individual body chemistry.\",\n  \"callToAction\": \"Have you noticed a perfume smelling different on your skin?\",\n  \"hashtags\": [\n    \"#Perfume\",\n    \"#Fragrance\",\n    \"#PerfumeEducation\"\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        384,
+        208
+      ],
+      "id": "8bb4d2d0-8669-411c-a053-846ed235cb5d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool when a complete social media content draft has been generated and needs to be saved for later review. \nThe tool should append one row to the content calendar sheet with the topic, platform, tone, language, title, caption, call to action, hashtags, and draft status.\nOnly use this tool after the content has been created. Do not use it if the required fields are missing.",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1fvKmTSx0Z2VOpsw4e_D1VgqjqBM4Mdx50jie42BJ93U",
+          "mode": "list",
+          "cachedResultName": "n8n_content_calendar_template",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fvKmTSx0Z2VOpsw4e_D1VgqjqBM4Mdx50jie42BJ93U/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 820811008,
+          "mode": "list",
+          "cachedResultName": "Content Calendar",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1fvKmTSx0Z2VOpsw4e_D1VgqjqBM4Mdx50jie42BJ93U/edit#gid=820811008"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "topic",
+              "displayName": "topic",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "platform",
+              "displayName": "platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "tone",
+              "displayName": "tone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "language",
+              "displayName": "language",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "caption",
+              "displayName": "caption",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "callToAction",
+              "displayName": "callToAction",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hashtags",
+              "displayName": "hashtags",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "createdAt",
+              "displayName": "createdAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        240,
+        304
+      ],
+      "id": "25a3f44e-8a4f-4c89-90c5-f6533522cb5d",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DrXqmy1rOcaM2qe5",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "dgcastanoa@gmail.com",
+        "subject": "n8n Content Agent - Execution Report",
+        "emailType": "text",
+        "message": "={{\n`AI CONTENT AGENT — EXECUTION REPORT\n\nExecution time:\n${$now}\n\nREQUEST\nTopic: ${$('Webhook').item.json.body.topic}\nPlatform: ${$('Webhook').item.json.body.platform}\nTone: ${$('Webhook').item.json.body.tone}\nLanguage: ${$('Webhook').item.json.body.language}\n\nAGENT OUTPUT\n${JSON.stringify($json.output ?? $json, null, 2)}\n\nTOOL\nGoogle Sheets - Append Row\n\nThis automated email serves as the human supervision and observability log for the workflow.`\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "15fe1ac0-5ffc-4388-9213-8b7878193bd9",
+      "name": "n8n Content Agent - Execution Report",
+      "webhookId": "67523be0-202c-407b-80a7-9c07b250af58",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "5UP2mW2JTTp5WvNl",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Content Creator Assistant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Content Creator Assistant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Content Creator Assistant",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "Content Creator Assistant",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Creator Assistant": {
+      "main": [
+        [
+          {
+            "node": "n8n Content Agent - Execution Report",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6ef6629a-8555-4cc1-a99a-9013e74bf17b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ae199808eeb29f95253ef8e165d7b75dc0fa49d5c43a1b24a633ca6a8f07cd9c"
+  },
+  "id": "9PTW7wZhEpbZZ6PC",
+  "tags": []
+}
